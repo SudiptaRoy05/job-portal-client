@@ -92,7 +92,7 @@ export default function Navbar() {
 
         {/* Navbar End */}
         <div className="navbar-end space-x-3">
-          <Link to="/login" className="btn bg-white text-blue-600 hover:bg-blue-100">
+          <Link to="/signin" className="btn bg-white text-blue-600 hover:bg-blue-100">
             Sign In
           </Link>
           <Link to="/signup" className="btn bg-blue-500 hover:bg-blue-600 text-white">

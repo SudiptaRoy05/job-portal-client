@@ -2,19 +2,29 @@
 import Lottie from "lottie-react";
 import { FcGoogle } from "react-icons/fc";
 import signUPLottie from "../../assets/Lottie/SignUp.json";
+import { useContext } from "react";
+import AuthContext from "../../Context/AuthContext/AuthContext";
 
 export default function Signup() {
 
-    const handleSignup=(e)=>{
-        e.preventDefault();
-        const form = new FormData(e.target);
-        const email = form.get('email');
-        const password = form.get('password');
-        const newUser = {email, password}
-        console.log(newUser);
-        // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,}$/;
+  const { createUsers } = useContext(AuthContext);
 
-    }
+
+  const handleSignup = (e) => {
+    e.preventDefault();
+    const form = new FormData(e.target);
+    const email = form.get('email');
+    const password = form.get('password');
+    const newUser = { email, password }
+    console.log(newUser);
+    // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,}$/;
+    createUsers(email, password)
+    .then(result => {
+      console.log(result.user)
+    }).catch((error) => {
+        console.log(error.message)
+    })
+  }
   return (
     <div className="min-h-screen flex items-center justify-center bg-white px-4">
       <div className="w-full max-w-4xl flex flex-col md:flex-row items-center md:items-start bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-xl overflow-hidden">
