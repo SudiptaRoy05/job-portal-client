@@ -1,4 +1,4 @@
-import { useLoaderData } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 import { FaMapMarkerAlt, FaEnvelope, FaUser } from "react-icons/fa";
 
 export default function JobDetails() {
@@ -91,12 +91,14 @@ export default function JobDetails() {
 
                         {/* Apply Button */}
                         <div className="text-center">
-                            <button
-                                className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold py-3 rounded-lg shadow-lg transition duration-300"
-                                onClick={() => alert("Application Submitted!")}
-                            >
-                                Apply Now
-                            </button>
+                            <Link to={`/jobApply/${job._id}`}>
+                                <button
+                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold py-3 rounded-lg shadow-lg transition duration-300"
+
+                                >
+                                    Apply Now
+                                </button>
+                            </Link>
                         </div>
                     </div>
                 </div>
