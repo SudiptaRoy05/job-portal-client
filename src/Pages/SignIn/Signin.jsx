@@ -4,9 +4,12 @@ import { MdEmail, MdLock } from "react-icons/md";
 import signin from "../../assets/Lottie/SignIn.json";
 import AuthContext from "../../Context/AuthContext/AuthContext";
 import { useContext } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function Signin() {
     const { signInUser, socialSignIn } = useContext(AuthContext);
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const handleSignin = (e) => {
         e.preventDefault();
@@ -17,6 +20,7 @@ export default function Signin() {
         signInUser(email, password)
             .then((result) => {
                 console.log(result.user)
+                navigate(location.state || '/', { replace: true })
             }).catch(error => {
                 console.log(error.message)
             })
