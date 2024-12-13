@@ -7,7 +7,7 @@ import AuthContext from "../../Context/AuthContext/AuthContext";
 
 export default function Signup() {
 
-  const { createUsers } = useContext(AuthContext);
+  const { createUsers, socialSignIn } = useContext(AuthContext);
 
 
   const handleSignup = (e) => {
@@ -19,10 +19,20 @@ export default function Signup() {
     console.log(newUser);
     // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,}$/;
     createUsers(email, password)
-    .then(result => {
-      console.log(result.user)
-    }).catch((error) => {
+      .then(result => {
+        console.log(result.user)
+      }).catch((error) => {
         console.log(error.message)
+      })
+  }
+
+  const googleSignIn=()=>{
+    socialSignIn()
+    .then(result =>{
+      console.log(result.user)
+    })
+    .error(error =>{
+      console.log(error.message)
     })
   }
   return (
@@ -71,6 +81,7 @@ export default function Signup() {
           </div>
 
           <button
+          onClick={googleSignIn}
             className="flex items-center justify-center w-full border border-gray-300 rounded-lg py-3 hover:bg-gray-100 transition"
           >
             <FcGoogle className="mr-3 text-2xl" />

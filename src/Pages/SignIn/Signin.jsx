@@ -6,7 +6,7 @@ import AuthContext from "../../Context/AuthContext/AuthContext";
 import { useContext } from "react";
 
 export default function Signin() {
-    const {signInUser} = useContext(AuthContext);
+    const { signInUser, socialSignIn } = useContext(AuthContext);
 
     const handleSignin = (e) => {
         e.preventDefault();
@@ -15,11 +15,21 @@ export default function Signin() {
         const password = form.get('password')
         console.log(email, password)
         signInUser(email, password)
-        .then((result) => {
-            console.log(result.user)
-        }).catch(error => {
-            console.log(error.message)
-        })
+            .then((result) => {
+                console.log(result.user)
+            }).catch(error => {
+                console.log(error.message)
+            })
+    }
+
+    const googleSignIn = () => {
+        socialSignIn()
+            .then(result => {
+                console.log(result.user)
+            })
+            .error(error => {
+                console.log(error.message)
+            })
     }
     return (
         <div>
@@ -76,6 +86,7 @@ export default function Signin() {
                         </div>
 
                         <button
+                            onClick={googleSignIn}
                             type="button"
                             className="flex items-center justify-center w-full border border-gray-300 rounded-lg py-3 hover:bg-gray-100 transition"
                         >
