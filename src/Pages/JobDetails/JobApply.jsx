@@ -1,8 +1,10 @@
 import { useParams } from "react-router-dom";
+import UseAuth from "../../Hooks/UseAuth";
 
 export default function JobApply() {
-    const id = useParams();
-    // console.log(id)
+    const { id } = useParams();
+    const { user } = UseAuth();
+    // console.log(id, user?.email)
     const submitJobApplication = e => {
         e.preventDefault();
         const form = new FormData(e.target);
@@ -10,8 +12,31 @@ export default function JobApply() {
         const github = form.get('github');
         const cv = form.get('resume');
 
-        const application = { linkedin, github, cv };
-        console.log(application);
+        // const application = { linkedin, github, cv };
+        // console.log(application);
+
+        const jobApplication = {
+            job_id: id,
+            applicant_email: user?.email,
+            linkedin,
+            github,
+            cv,
+        }
+
+        fetch('http://localhost:5000/jobApplications', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(jobApplication),
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+            })
+            .catch(error => {
+                console.log(error.message)
+            })
 
 
     }
