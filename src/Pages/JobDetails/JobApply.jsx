@@ -1,19 +1,19 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import UseAuth from "../../Hooks/UseAuth";
+import Swal from "sweetalert2";
 
 export default function JobApply() {
     const { id } = useParams();
     const { user } = UseAuth();
-    // console.log(id, user?.email)
-    const submitJobApplication = e => {
+    const navigate = useNavigate()
+    
+
+    const submitJobApplication = (e) => {
         e.preventDefault();
         const form = new FormData(e.target);
-        const linkedin = form.get('linkedin');
-        const github = form.get('github');
-        const cv = form.get('resume');
-
-        // const application = { linkedin, github, cv };
-        // console.log(application);
+        const linkedin = form.get("linkedin");
+        const github = form.get("github");
+        const cv = form.get("resume");
 
         const jobApplication = {
             job_id: id,
@@ -21,25 +21,43 @@ export default function JobApply() {
             linkedin,
             github,
             cv,
-        }
+        };
 
-        fetch('http://localhost:5000/jobApplications', {
+        fetch("http://localhost:5000/jobApplications", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(jobApplication),
         })
-            .then(res => res.json())
-            .then(data => {
-                console.log(data)
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.insertedId) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Application Submitted",
+                        text: "Your job application has been submitted successfully!",
+                        
+                    });
+                    navigate('/myapplication');
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Submission Failed",
+                        text: "Something went wrong while submitting your application.",
+                    });
+                }
+                e.target.reset();
             })
-            .catch(error => {
-                console.log(error.message)
-            })
+            .catch((error) => {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: error.message,
+                });
+            });
+    };
 
-
-    }
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-gray-100 to-gray-200 p-6">
             <div className="bg-white w-full max-w-lg rounded-lg shadow-lg overflow-hidden">
@@ -97,6 +115,7 @@ export default function JobApply() {
                     {/* Submit Button */}
                     <div className="form-control mt-6">
                         <button
+                            
                             type="submit"
                             className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 rounded-lg text-lg font-semibold hover:opacity-90 transition-all"
                         >

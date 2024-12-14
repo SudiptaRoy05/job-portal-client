@@ -38,12 +38,12 @@ export default function Navbar() {
       </li>
       <li>
         <NavLink
-          to="/services"
+          to="/myapplication"
           className={({ isActive }) =>
             isActive ? "text-blue-500 font-semibold" : "hover:text-blue-400"
           }
         >
-          Services
+          My Applications
         </NavLink>
       </li>
       <li>
