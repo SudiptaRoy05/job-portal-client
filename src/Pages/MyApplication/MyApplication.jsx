@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 import UseAuth from "../../Hooks/UseAuth";
 
 export default function MyApplication() {
@@ -12,6 +13,48 @@ export default function MyApplication() {
                 setJobs(data);
             });
     }, [user?.email]);
+
+    const handleDelete = (id) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`http://localhost:5000/jobApplications/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.deletedCount > 0) {
+                            Swal.fire(
+                                'Deleted!',
+                                'Your job application has been deleted.',
+                                'success'
+                            );
+                            // Update the state to remove the deleted job
+                            setJobs(jobs.filter((job) => job._id !== id));
+                        } else {
+                            Swal.fire(
+                                'Error!',
+                                'Failed to delete the job application.',
+                                'error'
+                            );
+                        }
+                    })
+                    .catch((error) => {
+                        Swal.fire('Error!', error.message, 'error');
+                    });
+            }
+        });
+    };
 
     return (
         <div className="p-6 bg-gradient-to-r from-blue-50 to-purple-50 min-h-screen">
@@ -27,6 +70,7 @@ export default function MyApplication() {
                                 <th className="px-6 py-4 text-left text-sm font-semibold">LinkedIn</th>
                                 <th className="px-6 py-4 text-left text-sm font-semibold">GitHub</th>
                                 <th className="px-6 py-4 text-left text-sm font-semibold">Resume</th>
+                                <th className="px-6 py-4 text-center text-sm font-semibold">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -74,6 +118,14 @@ export default function MyApplication() {
                                         >
                                             View Resume
                                         </a>
+                                    </td>
+                                    <td className="px-6 py-4 text-center">
+                                        <button
+                                            onClick={() => handleDelete(job._id)}
+                                            className="bg-red-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-600 transition-all"
+                                        >
+                                            Delete
+                                        </button>
                                     </td>
                                 </tr>
                             ))}
