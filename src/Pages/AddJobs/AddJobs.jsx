@@ -1,11 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import UseAuth from "../../Hooks/UseAuth";
 import Swal from 'sweetalert2';
-const { user } = UseAuth();
 
 export default function AddJobs() {
-
-
+    const { user } = UseAuth();
     const navigate = useNavigate();
     const handleAddJob = (e) => {
         e.preventDefault();
@@ -13,9 +11,14 @@ export default function AddJobs() {
         const initialData = Object.fromEntries(form);
         const { minSalary, maxSalary, salaryCurrency, ...newJob } = initialData;
 
-        newJob.salaryRange = { minSalary, maxSalary, salaryCurrency };
+        newJob.salaryRange = {
+            min: parseFloat(minSalary),
+            max: parseFloat(maxSalary),
+            currency: salaryCurrency,
+        };
         newJob.requirements = newJob.requirements.split('\n');
         newJob.responsibilities = newJob.responsibilities.split('\n');
+        console.log(newJob);
 
         fetch('http://localhost:5000/jobs', {
             method: 'POST',
@@ -36,10 +39,9 @@ export default function AddJobs() {
                         timer: 3000,
                     });
                     e.target.reset();
-                    navigate('/');
+                    navigate('/mypostedjobs');
                     // console.log(data);
                 }
-
             })
             .catch((error) => {
                 // Error alert
@@ -52,6 +54,7 @@ export default function AddJobs() {
                 console.error(error);
             });
     };
+
     return (
         <div className="p-8 bg-gradient-to-r from-purple-50 to-blue-50 min-h-screen">
             <h1 className="text-4xl font-bold text-center text-purple-600 mb-8">Add Job</h1>
@@ -60,7 +63,7 @@ export default function AddJobs() {
                     <div>
                         <label className="block text-sm font-medium text-purple-600">Job Title</label>
                         <input
-                            name="jobTitle"
+                            name="title"
                             type="text"
                             placeholder="Job Title"
                             className="border-2 border-purple-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 rounded-lg p-3 w-full transition ease-in-out"
@@ -108,9 +111,9 @@ export default function AddJobs() {
                         </select>
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-purple-600">Job Posting Date</label>
+                        <label className="block text-sm font-medium text-purple-600">Application Deadline</label>
                         <input
-                            name="date"
+                            name="applicationDeadline"
                             type="date"
                             className="border-2 border-purple-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 rounded-lg p-3 w-full transition ease-in-out"
                             required
@@ -155,7 +158,7 @@ export default function AddJobs() {
                     <div>
                         <label className="block text-sm font-medium text-purple-600">Job Description</label>
                         <textarea
-                            name="jobDescription"
+                            name="description"
                             placeholder="Job Description"
                             className="border-2 border-purple-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 rounded-lg p-3 w-full h-28 transition ease-in-out"
                             required
@@ -164,7 +167,7 @@ export default function AddJobs() {
                     <div>
                         <label className="block text-sm font-medium text-purple-600">Company Name</label>
                         <input
-                            name="companyName"
+                            name="company"
                             type="text"
                             placeholder="Company Name"
                             className="border-2 border-purple-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 rounded-lg p-3 w-full transition ease-in-out"
@@ -192,7 +195,7 @@ export default function AddJobs() {
                     <div>
                         <label className="block text-sm font-medium text-purple-600">HR Email</label>
                         <input
-                            name="hrEmail"
+                            name="hr_email"
                             type="email"
                             defaultValue={user?.email}
                             placeholder="HR Email"
@@ -203,7 +206,7 @@ export default function AddJobs() {
                     <div>
                         <label className="block text-sm font-medium text-purple-600">HR Name</label>
                         <input
-                            name="hrName"
+                            name="hr_name"
                             type="text"
                             placeholder="HR Name"
                             className="border-2 border-purple-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 rounded-lg p-3 w-full transition ease-in-out"
@@ -213,7 +216,7 @@ export default function AddJobs() {
                     <div>
                         <label className="block text-sm font-medium text-purple-600">Company Logo URL</label>
                         <input
-                            name="companyLogo"
+                            name="company_logo"
                             type="url"
                             placeholder="Company Logo URL"
                             className="border-2 border-purple-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 rounded-lg p-3 w-full transition ease-in-out"

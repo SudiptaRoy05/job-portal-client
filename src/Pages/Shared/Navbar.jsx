@@ -38,22 +38,22 @@ export default function Navbar() {
       </li>
       <li>
         <NavLink
+          to="/mypostedjobs"
+          className={({ isActive }) =>
+            isActive ? "text-blue-500 font-semibold" : "hover:text-blue-400"
+          }
+        >
+          My Posted Jobs
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
           to="/myapplication"
           className={({ isActive }) =>
             isActive ? "text-blue-500 font-semibold" : "hover:text-blue-400"
           }
         >
           My Applications
-        </NavLink>
-      </li>
-      <li>
-        <NavLink
-          to="/contact"
-          className={({ isActive }) =>
-            isActive ? "text-blue-500 font-semibold" : "hover:text-blue-400"
-          }
-        >
-          Contact
         </NavLink>
       </li>
     </>
