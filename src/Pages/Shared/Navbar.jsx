@@ -28,12 +28,12 @@ export default function Navbar() {
       </li>
       <li>
         <NavLink
-          to="/about"
+          to="/addjobs"
           className={({ isActive }) =>
             isActive ? "text-blue-500 font-semibold" : "hover:text-blue-400"
           }
         >
-          About
+          Add Jobs
         </NavLink>
       </li>
       <li>
