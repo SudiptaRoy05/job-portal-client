@@ -3,7 +3,7 @@ import { FaMapMarkerAlt, FaEnvelope, FaUser } from "react-icons/fa";
 
 export default function JobDetails() {
     const job = useLoaderData();
-    console.log(job);
+    // console.log(job);
 
     return (
         <div className="bg-gray-100 min-h-screen py-10">
