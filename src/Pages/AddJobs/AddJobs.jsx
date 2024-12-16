@@ -165,6 +165,19 @@ export default function AddJobs() {
                         ></textarea>
                     </div>
                     <div>
+                        <label className="block text-sm font-medium text-purple-600">Status</label>
+                        <select
+                            name="status"
+                            className="border-2 border-purple-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 rounded-lg p-3 w-full transition ease-in-out"
+                            required
+                        >
+                            <option value="">Select Status</option>
+                            <option value="Active">Active</option>
+                            <option value="Closed">Closed</option>
+                        </select>
+                    </div>
+
+                    <div>
                         <label className="block text-sm font-medium text-purple-600">Company Name</label>
                         <input
                             name="company"

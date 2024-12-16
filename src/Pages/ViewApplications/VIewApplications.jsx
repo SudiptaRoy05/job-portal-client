@@ -1,41 +1,49 @@
 import { useLoaderData } from "react-router-dom";
-import { useState } from "react";
+import Swal from "sweetalert2";
 
 export default function ViewApplications() {
     const applications = useLoaderData(); // Fetch applications via loader
-    const [updatedApplications, setUpdatedApplications] = useState(applications); // Local state for updated statuses
+    // const [updatedApplications, setUpdatedApplications] = useState(applications); // Local state for updated statuses
 
-    // Function to handle status updates
-    const handleStatusUpdate = async (id, newStatus) => {
-        try {
-            // Update the status in the backend
-            const response = await fetch(`http://localhost:5000/applications/${id}/status`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ status: newStatus }), // Send new status to backend
+    const handleStatusUpdate = (id, newStatus) => {
+        console.log(id, newStatus);
+        const data = {
+            status: newStatus
+        };
+        fetch(`http://localhost:5000/jobApplications/${id}`, {
+            method: "PATCH",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.modifiedCount) {
+                    Swal.fire({
+                        title: 'Status Updated!',
+                        text: `The application status has been updated to "${newStatus}".`,
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                    });
+                }
+                console.log(data);
+            })
+            .catch(error => {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Failed to update the application status. Please try again.',
+                    icon: 'error',
+                    confirmButtonText: 'Retry',
+                });
+                console.error(error.message);
             });
-
-            if (response.ok) {
-                // Update the local state with the new status
-                setUpdatedApplications((prev) =>
-                    prev.map((app) =>
-                        app._id === id ? { ...app, status: newStatus } : app
-                    )
-                );
-                alert("Status updated successfully!");
-            } else {
-                console.error("Failed to update status");
-                alert("Failed to update status");
-            }
-        } catch (error) {
-            console.error("Error updating status:", error);
-        }
     };
 
     return (
         <div className="p-8 bg-gradient-to-r from-purple-50 to-blue-50 min-h-screen">
             <h1 className="text-3xl font-bold text-purple-600 text-center mb-8">
-                Applications for this Job: {updatedApplications.length}
+                Applications for this Job: {applications.length}
             </h1>
 
             <div className="overflow-x-auto shadow-lg rounded-lg bg-white">
@@ -51,12 +59,11 @@ export default function ViewApplications() {
                         </tr>
                     </thead>
                     <tbody>
-                        {updatedApplications.map((app, idx) => (
+                        {applications.map((app, idx) => (
                             <tr
                                 key={app._id}
-                                className={`${
-                                    idx % 2 === 0 ? "bg-gray-50" : "bg-white"
-                                } hover:bg-gray-100`}
+                                className={`${idx % 2 === 0 ? "bg-gray-50" : "bg-white"
+                                    } hover:bg-gray-100`}
                             >
                                 <td className="px-6 py-4 text-sm text-gray-700 font-medium">
                                     {idx + 1}
@@ -76,17 +83,11 @@ export default function ViewApplications() {
                                         defaultValue={app.status || "Pending"}
                                     >
                                         <option value="Pending">Pending</option>
-                                        <option value="Approved">Approved</option>
+                                        <option value="Under Review">Under Review</option>
+                                        <option value="Set Interview">Set Interview</option>
+                                        <option value="Hire">Hire</option>
                                         <option value="Rejected">Rejected</option>
                                     </select>
-                                    <button
-                                        onClick={() =>
-                                            handleStatusUpdate(app._id, "Reviewed")
-                                        }
-                                        className="px-4 py-2 bg-purple-600 text-white rounded-full shadow-md hover:bg-purple-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
-                                    >
-                                        Mark as Reviewed
-                                    </button>
                                 </td>
                             </tr>
                         ))}
