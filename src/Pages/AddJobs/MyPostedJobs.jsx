@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 export default function MyPostedJobs() {
   const [jobs, setJobs] = useState([]);
+  console.log(jobs)
   const { user } = UseAuth();
 
   useEffect(() => {

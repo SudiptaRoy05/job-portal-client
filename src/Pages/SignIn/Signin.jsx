@@ -5,6 +5,7 @@ import signin from "../../assets/Lottie/SignIn.json";
 import AuthContext from "../../Context/AuthContext/AuthContext";
 import { useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Signin() {
     const { signInUser, socialSignIn } = useContext(AuthContext);
@@ -17,9 +18,15 @@ export default function Signin() {
         const email = form.get('email');
         const password = form.get('password')
         console.log(email, password)
+
         signInUser(email, password)
             .then((result) => {
                 console.log(result.user)
+                const user = { email: email };
+                axios.post('http://localhost:5000/jwt', user, { withCredentials: true })
+                    .then(res => {
+                        console.log(res.data)
+                    })
                 navigate(location.state || '/', { replace: true })
             }).catch(error => {
                 console.log(error.message)
@@ -30,6 +37,7 @@ export default function Signin() {
         socialSignIn()
             .then(result => {
                 console.log(result.user)
+                navigate(location.state || '/', { replace: true })
             })
             .error(error => {
                 console.log(error.message)
